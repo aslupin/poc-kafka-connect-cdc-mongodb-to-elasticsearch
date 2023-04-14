@@ -40,7 +40,7 @@ step 3) add source and sink connector, these command will add `mongo-source` as 
 TBC
 
 ```sh
-# add new mongo-source connector as a source connector
+# add new mongo-source connector as a source connector by using JsonSchemaConverter
 curl -X POST \
   -H "Content-Type: application/json" \
   --data '
@@ -57,7 +57,7 @@ curl -X POST \
       "output.format.value": "schema",
       "output.format.key": "json",
 
-      "value.converter": "io.confluent.connect.avro.AvroConverter",
+      "value.converter":"io.confluent.connect.json.JsonSchemaConverter",
       "value.converter.schema.registry.url": "http://schema-registry:8081",
       "key.converter": "org.apache.kafka.connect.storage.StringConverter",
 
@@ -74,7 +74,7 @@ curl -X POST \
   ' \
   http://connect:8083/connectors -w "\n"
 
-# add new elasticsearch-sink connector as a sink connector
+# add new elasticsearch-sink connector as a sink connector by using JsonSchemaConverter
 curl -X POST \
   -H "Content-Type: application/json" \
   --data '
@@ -87,7 +87,7 @@ curl -X POST \
       "type.name": "_doc",
       "tasks.max": "1",
 
-      "value.converter": "io.confluent.connect.avro.AvroConverter",
+      "value.converter":"io.confluent.connect.json.JsonSchemaConverter",
       "value.converter.schema.registry.url": "http://schema-registry:8081",
       "key.converter": "org.apache.kafka.connect.storage.StringConverter",
 
