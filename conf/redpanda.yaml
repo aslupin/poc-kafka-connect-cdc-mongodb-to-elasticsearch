@@ -1,0 +1,16 @@
+kafka:
+  brokers: ["broker:29092"]
+  schemaRegistry:
+    enabled: true
+    urls: ["http://schema-registry:8081"]
+  
+connect:
+  enabled: true
+  clusters:
+    - name: connect-local
+      url: http://connect:8083
+      tls:
+        enabled: false
+  connectTimeout: 15s
+  readTimeout: 60s
+  requestTimeout: 6s
