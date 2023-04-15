@@ -4,7 +4,7 @@ A repository PoC streaming data from MongoDB as upstream to Elasticsearch downst
 # Prerequisites 🚀
 - [Docker](https://docs.docker.com/get-docker/)
 
-## 1️⃣ mongodb-source-to-elasticsearch-sink
+# mongodb-source-to-elasticsearch-sink using JsonSchemaConverter
 An environment will PoC about to capture data changes from MongoDB to Elasticsearch use case
 
 `docker-compose` will contains these services
@@ -134,7 +134,7 @@ db.sampleData.updateOne(
   - [http://localhost:8888/schema-registry](http://localhost:8888/schema-registry) manage Schema Registry that used from both source and sink connector
   - [http://localhost:8888/topics](http://localhost:8888/topics) manage message several topics that storing data from upstream
 - [http://localhost:8001](http://localhost:8001) alternative UI for managing schema registry
-- [http://127.0.0.1:5602/app/dev_tool](http://127.0.0.1:5602/app/dev_tool) Kibana Dev Tool for requesting command to Elasticsearch. for more requests, you can see at `scripts/elasticsearch/requests.es` ([ES extension - VS code extension](https://marketplace.visualstudio.com/items?itemName=ria.elastic))
+- [http://127.0.0.1:5602/app/dev_tools#/console](http://127.0.0.1:5602/app/dev_tools#/console) Kibana Dev Tool for requesting command to Elasticsearch. for more requests, you can see at `scripts/elasticsearch/requests.es` ([ES extension - VS code extension](https://marketplace.visualstudio.com/items?itemName=ria.elastic))
 
 ## References 🙏
 - [Kafka EDU - Mongodb University Org](https://github.com/mongodb-university/kafka-edu)
