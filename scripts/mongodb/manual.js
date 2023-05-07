@@ -7,14 +7,17 @@
 
 // step 3) run `use quickstart` command for switching to quickstart db
 
-// step 4) try to insert document and monitor on the topic
+// step 4) create `sampleData` collection
+db.createCollection('sampleData')
+
+// step 5) try to insert document and monitor on the topic
 db.sampleData.insertOne({ "hello": "world"})
 
-// step 5) try to change document value
+// step 6) try to change document value
 db.sampleData.updateOne(
   { _id: ObjectId("your-document-object-id") },
   { $set: { hello: "updated"} },
 )
 
-// step 4) try with your change events requirements
+// more information about change events
 // https://www.mongodb.com/docs/manual/reference/change-events/

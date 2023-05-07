@@ -18,7 +18,7 @@ An environment will PoC about to capture data changes from MongoDB to Elasticsea
 - MongoDB single node replica set
 - Kibana
 - Elasticsearch
-- Redpanda integrated with Schema Registry and Kafka Connect
+- Redpanda Console (integrated with Schema Registry and Kafka Connect)
 
 ### Start Development 🚧
 step 1) you have to change directories and start all services by using
@@ -32,13 +32,35 @@ step 2) shell to some container (we will use `mongo1`)
 make exe
 ```
 
-step 3) add source and sink connector, these command will add `mongo-source` as source connector and `elasticsearch-sink` as sink connector to capture data changes from upstream data to Kafka topic then push it to downstream. for more commands, you can see at `scripts/kafka-connect/requests.sh`
+step 3) we have to create collection first for initialing cursor that source connector use it to capture changes and produce it to kafka topic
 
-(optional) you can do this step by using Redpanda to create/edit/delete connectors on this [http://localhost:8888/connect-clusters/connect-local](http://localhost:8888/connect-clusters/connect-local)
+3.1) shell to MongoDB replica
+```sh
+mongo mongodb://mongo1:27017/?replicaSet=rs0    # for MongoDB version 3.X
+mongosh mongodb://mongo1:27017/?replicaSet=rs0  # for MongoDB version 6.X
+```
 
-#### configuration explained
-TBC
+3.2) switch to target database
+```sh
+use quickstart
+```
 
+3.3) create a collection
+```js
+db.createCollection('sampleData')
+```
+
+step 4) add source and sink connector, these command will add `mongo-source` as source connector and `elasticsearch-sink` as sink connector to capture data changes from upstream data to Kafka topic then push it to downstream. for more commands, you can see at `scripts/kafka-connect/requests.sh`
+
+(optional) you can do this step by using Redpanda Console to create/edit/delete connectors on this [http://localhost:8888/connect-clusters/connect-local](http://localhost:8888/connect-clusters/connect-local)
+
+
+4.1) shell and open new session for commanding connector
+```sh
+make exe
+```
+
+4.2) add connectors
 ```sh
 # add new mongo-source connector as a source connector by using JsonSchemaConverter
 curl -X POST \
@@ -84,7 +106,6 @@ curl -X POST \
       "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
       "connection.url": "http://elasticsearch:9200",
       "topics": "quickstart.sampleData",
-      "type.name": "_doc",
       "tasks.max": "1",
 
       "value.converter":"io.confluent.connect.json.JsonSchemaConverter",
@@ -104,20 +125,9 @@ curl -X POST \
   http://connect:8083/connectors -w "\n"
 ```
 
-step 4) we will try to trigger or make some change events to out upstream system by insert one document to collection. for more commands, you can see at `scripts/mongodb/manual.js`
+step 5) we will try to trigger or make some change events to out upstream system by insert one document to collection. for more commands, you can see at `scripts/mongodb/manual.js`
 
-4.1) shell to our replica by one of these commands
-```sh
-mongo mongodb://mongo1:27017/?replicaSet=rs0    # for MongoDB version 3.X
-mongosh mongodb://mongo1:27017/?replicaSet=rs0  # for MongoDB version 6.X
-```
-
-4.2) switch to target database
-```sh
-use quickstart
-```
-
-4.3) insert or update document that make event changes. you can read other events from this [Change Events - MongoDB](https://www.mongodb.com/docs/manual/reference/change-events/)
+5.1) insert or update document that make event changes. you can read other events from this [Change Events - MongoDB](https://www.mongodb.com/docs/manual/reference/change-events/)
 ```js
 db.sampleData.insertOne({ "hello": "world"})
 
@@ -128,7 +138,7 @@ db.sampleData.updateOne(
 )
 ```
 
-5) you can monitoring data flow from these URL
+5.2) you can monitoring data flow from these URL
 - [http://localhost:8888](http://localhost:8888) Redpanda
   - [http://localhost:8888/connect-clusters/connect-local](http://localhost:8888/connect-clusters/connect-local) manage Kafka connectors on UI
   - [http://localhost:8888/schema-registry](http://localhost:8888/schema-registry) manage Schema Registry that used from both source and sink connector
@@ -143,7 +153,7 @@ db.sampleData.updateOne(
 - [Schema Registry](https://docs.confluent.io/platform/current/schema-registry/index.html)
 - [Schema Registry UI](https://hub.docker.com/r/landoop/schema-registry-ui/)
 - [Redpanda + Schema Registry](https://docs.redpanda.com/docs/manage/schema-registry/)
-- [Redpanda + Schema Registry](https://docs.redpanda.com/docs/manage/console/kafka-connect/)
+- [Redpanda Console](https://docs.redpanda.com/docs/manage/console/kafka-connect/)
 - [MongoDB Kafka Connector](https://docs.mongodb.com/kafka-connector/current/)
 - [Connectors to Kafka](https://docs.confluent.io/home/connect/overview.html)
 - [Change Events - MongoDB](https://www.mongodb.com/docs/manual/reference/change-events/)

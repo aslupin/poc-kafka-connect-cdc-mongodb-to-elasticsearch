@@ -3,6 +3,9 @@
 # list all connectors
 curl -X GET http://connect:8083/connectors
 
+# list connector, tasks, and workers
+curl -X GET -s "http://connect:8083/connectors?expand=info&expand=status" | jq '.'
+
 # delete connector
 curl -X DELETE http://connect:8083/connectors/mongo-source
 curl -X DELETE http://connect:8083/connectors/elasticsearch-sink
@@ -51,7 +54,6 @@ curl -X POST \
       "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
       "connection.url": "http://elasticsearch:9200",
       "topics": "quickstart.sampleData",
-      "type.name": "_doc",
       "tasks.max": "1",
 
       "value.converter":"io.confluent.connect.json.JsonSchemaConverter",
